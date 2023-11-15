@@ -19,7 +19,7 @@ pipeline {
             steps {
                 dependencyCheck additionalArguments: '''
                             -o './'
-                            -s './web'
+                            -s './webapp'
                             -f 'ALL' 
                             --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
 
