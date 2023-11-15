@@ -57,7 +57,7 @@ pipeline {
                 script {
                     sh "python3 --version"
                     sh "python3 -m pip install selenium --break-system-packages"
-                    sh "python3 ./web/test/testtest1.py"
+                    sh "python3 ./webapp/testtest1.py"
                 }
             }
         }
