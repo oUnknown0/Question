@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+    }
+    environment {
+        scannerHome = tool 'SonarQube'
+    }
+    stages {
+        stage('Checkout repository') {
+            steps {
+                echo "Entering 'Checkout repository' stage"
+                checkout scm
+                echo "Completed 'Checkout repository' stage"
+            }
+        }
+
+        stage('Check Current Directory') {
+            steps {
+                sh "ls -la"
+            }
+        }
+
+        stage('OWASP Dependency-Check Vulnerabilities') {
+            steps {
+                dependencyCheck additionalArguments: '''
+                            -o './'
+                            -s './web'
+                            -f 'ALL' 
+                            --prettyPrint''', odcInstallation: 'OWASP Dependency-Check Vulnerabilities'
+
+                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+            }
+        }
+
+        stage('Code Quality Check via SonarQube') {
+            steps {
+                script {
+                    def sonarScannerHome = tool 'SonarQube';
+                    env.PATH = "${sonarScannerHome}/bin:${env.PATH}"
+
+                    withSonarQubeEnv('SonarQube') {
+                        sh """
+                        sonar-scanner \
+                        -Dsonar.projectKey=OWASP \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://sonarqube:9000 \
+                        -Dsonar.login=sqp_d3789b8e791922dd82dc5ae43daafc8ddbea819b
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    sh "python3 --version"
+                    sh "python3 -m pip install selenium --break-system-packages"
+                    sh "python3 ./web/test/testtest1.py"
+                }
+            }
+        }
+
+        // stage('Build, start docker and kill images') {
+        //     steps {
+        //         sh "dockerd &"
+        //         sh "docker --version"
+        //         sh "docker-compose -f setup-jenkins/docker-compose.yml down"
+        //         sh "docker-compose -f setup-jenkins/docker-compose.yml build"
+        //         sh "docker-compose -f setup-jenkins/docker-compose.yml up -d"
+        //         sh "docker ps"
+        //         sh "docker-compose -f setup-jenkins/docker-compose.yml down"
+        //     }
+        // }
+    }
+}

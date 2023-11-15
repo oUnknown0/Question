@@ -1,0 +1,4 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation_-DescriptorImpl plugin="dependency-check-jenkins-plugin@5.4.3">
+  <installations class="org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation-array"/>
+</org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation_-DescriptorImpl>
