@@ -18,6 +18,14 @@ services:
     ports:
       - "80:80"
 
+  web:
+    image: php:7.2-apache
+    container_name: htmlapplication
+    ports:
+      - "8000:80"
+    volumes:
+      - "./webapp:/var/www/html"
+
   git-server:
     build:
       dockerfile: gitserver.Dockerfile

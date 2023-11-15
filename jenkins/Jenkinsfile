@@ -15,12 +15,6 @@ pipeline {
             }
         }
 
-        stage('Check Current Directory') {
-            steps {
-                sh "ls -la"
-            }
-        }
-
         stage('OWASP Dependency-Check Vulnerabilities') {
             steps {
                 dependencyCheck additionalArguments: '''
